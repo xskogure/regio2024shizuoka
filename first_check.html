@@ -1,0 +1,402 @@
+
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    h1 {
+      font-size: xx-large;
+      font-color: green;
+      font-weight: bold;
+      border-style: solid;
+      border-width: 0pt 0pt 3pt 20pt;
+      border-color: lightblue;
+    }
+
+    h2 {
+      font-size: x-large;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      border-style: solid;
+      border-width: 0pt 0pt 3pt 10pt;
+      border-color: lightgreen;
+    }
+
+    h3 {
+      font-size: large;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      background-color: #DDFFFF;
+    }
+    th.rank {
+        color: white;
+        background: #888;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.id {
+        color: white;
+        background: #833;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.score {
+        color: white;
+        background: #383;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.task {
+        color: white;
+        background: #338;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+
+    td.rank {
+        background: #DDD;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+        text-align: right;
+    }
+    td.id {
+        background: #FCC;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    td.score {
+        background: #CFC;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+        text-align: right;
+    }
+    td.task {
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+
+    td.AC {
+        background: cyan;
+    }
+    
+    td.NOAC {
+        background: #AFF;
+    }
+
+    td.NONE {
+        background: gray;
+    }
+
+    td.count {
+        background: #DFF;
+    }
+    
+    span.correct {
+        color: green;
+    }
+
+    h1 a {
+      color: black;
+    }
+
+    .container {
+      max-width: fit-content;
+    }
+
+    .table {
+        border-width: 1px;
+        border-width: 1px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    window.addEventListener("load", (e) => {
+      update();
+    });
+
+    function downloadSubmissions(id) {
+      let second = 0;
+      let submissions = [];
+      while (true) {
+        let req = new XMLHttpRequest();
+        req.open("GET", `https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${id}&from_second=${second}`, false);
+        req.send(null);
+        let tmp = JSON.parse(req.responseText);
+        submissions = submissions.concat(tmp);
+        if (tmp.length < 500) break;
+        else second = tmp.slice(-1)[0]["epoch_second"];
+      }
+      return submissions;
+    }
+
+    function update() {
+      let atcoder_id_list =
+//         ["strkgr", ];
+         ["strkgr", "schwantz34", "piyoyoyo", "ekusy", "palulu", "segashoo", "propan", "whitemouse"];
+      let tasks = document.getElementsByClassName("task");
+      let task_section_list = [
+{"title": "&#9312;『基本的なプログラム，入出力の方法を確認しよう』", "colspan": 7},
+{"title": "&#9313;『条件分岐の使い方，文字列の扱い方を確認しよう』", "colspan": 12},
+{"title": "&#9314;『繰り返しの方法を確認しよう』", "colspan": 8},
+{"title": "&#9315;『リストの使い方を確認しよう』", "colspan": 6},
+{"title": "&#9316;『JOI2021/2022 一次予選にバーチャル参加しよう』", "colspan": 4},
+{"title": "&#9318;『課題が簡単すぎて物足りない人向け課題集』", "colspan": 26}
+];
+      let task_id_list = [
+["APG4b_a", "1.00.はじめに"],
+["joi2022_yo1c_a", "身長"],
+["joi2022_yo1b_a", "立方体"],
+["abc180_a", "box"],
+["joi2011yo_a", "合計時間"],
+["abc106_a", "Garden"],
+["abc173_a", "Payment"],
+["joi2021_yo1b_a", "帰省"],
+["abc197_a", "Rotate"],
+["joi2021_yo1c_a", "計算"],
+["abc218_a", "Weather Forecast"],
+["joi2020_yo1a_a", "3 つの整数"],
+["abc179_a", "Plural Form"],
+["joi2022_yo1c_b", "アイスクリーム"],
+["abc224_a", "Tires"],
+["joi2020_yo1b_a", "試験"],
+["abc167_a", "Registration"],
+["joi2021_yo1a_a", "2 番目に大きい整数"],
+["abc236_a", "chukodai"],
+["joi2022_yo1b_c", "次の文字"],
+["abc279_a", "wwwvvvvvv"],
+["abc276_a", "Rightmost"],
+["joi2021_yo1c_b", "IOI 文字列"],
+["joi2022_yo1c_c", "運動会"],
+["joi2021_yo1a_b", "JOI ソート"],
+["joig2021_b", "巻物"],
+["joi2020_yo1b_b", "文字列の反転"],
+["joi2021_yo1a_c", "共通要素"],
+["joig2022_a", "ピアノコンクール"],
+["joi2021_yo1b_c", "分割"],
+["joi2020_yo1b_c", "最頻値"],
+["joi2022_yo1c_d", "ボールの移動"],
+["joi2022_yo1b_d", "希少な数"],
+["joi2022_yo1a_a", "余り"],
+["joi2022_yo1a_b", "移動"],
+["joi2022_yo1a_c", "複雑な文字列"],
+["joi2022_yo1a_d", "箱と鍵"],
+["joi2019_yo_a", "ソーシャルゲーム"],
+["abc243_a", "Shampoo"],
+["abc116_b", "Collatz Problem"],
+["joi2020_yo1a_c", "マージ"],
+["joi2021_yo1c_c", "比較"],
+["joi2021_yo1b_b", "ビ太郎と IOI"],
+["joig2022_b", "掛け算"],
+["joi2020_yo1c_c", "最長昇順連続部分列"],
+["joi2014yo_b", "投票"],
+["joi2008yo_c", "カードゲーム"],
+["joi2018_yo_c", "幹線道路"],
+["abc186_b", "Blocks on Grid"],
+["joi2017yo_c", "休憩スペース"],
+["joi2016yo_c", "ロシアの旗"],
+["joi2020_yo2_a", "ポスター"],
+["joi2013yo_c", "看板"],
+["joi2012yo_c", "最高のピザ"],
+["joi2009yo_b", "コンテスト"],
+["abc088_b", "Card Game for Two"],
+["abc082_b", "Two Anagrams"],
+["joi2012yo_b", "サッカー"],
+["agc027_a", "Candy Distribution"],
+["abc165_c", "Many Requirements"],
+["abc114_c", "755"],
+["abc161_d", "Lunlun Number"],
+["abc119_c", "Synthetic Kadomatsu"]
+      ];
+      let tr_title = document.getElementById("table_thead_tr_title");
+      let tr_task = document.getElementById("table_thead_tr_task");
+      let th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("rank");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("id");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("score");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "Ranking";
+      th.classList.add("rank");
+      tr_task.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "AtCoder ID";
+      th.classList.add("id");
+      tr_task.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "Total Score";
+      th.classList.add("score");
+      tr_task.append(th);
+      for (let task_section of task_section_list) {
+        th = document.createElement("th");
+        th.innerHTML = task_section["title"];
+        th.setAttribute("colspan", task_section["colspan"]);
+        th.classList.add("task");
+        tr_title.append(th);
+      }
+      for (let task_id of task_id_list) {
+        th = document.createElement("th");
+        th.innerHTML = task_id[1];
+        th.classList.add("task");
+        tr_task.append(th);
+      }
+      let tableTaskList = {};
+      let totalScoreList = {};
+
+      for (let atcoder_id of atcoder_id_list) {
+        let allPoint = 0;
+        let tableTask = [];
+/*        
+        new Promise((resolve, reject) => {
+          resolve(downloadSubmissions(atcoder_id));
+        }).then((submissions) => {
+*/
+          let submissions = downloadSubmissions(atcoder_id);
+          let point=0;
+          let resultTask="";
+          for (let task of task_id_list) {
+            let r = false;
+            for (let submission of submissions) {
+              if (submission["problem_id"] == task[0]) {
+                resultTask = submission["result"];
+                point = submission["point"];
+                r = true;
+                if (resultTask == "AC") break;
+              }
+            }
+            let data = {};
+            if (r) {
+              allPoint += point;
+              data["label"] = resultTask;
+              data["score"] = point;
+              tableTask.push(data);
+            } else {
+              data["label"] = "NONE";
+              data["score"] = 0;
+              tableTask.push(data);
+            }
+          }
+//        });
+        totalScoreList[atcoder_id] = allPoint;
+        tableTaskList[atcoder_id] = tableTask;
+      }
+      console.log("tableTaskList="); console.log(tableTaskList);
+      console.log("totalScoreList="); console.log(totalScoreList);
+      for(let a of Object.keys(totalScoreList)) {
+        console.log("id: =>" + a + ", score: " + totalScoreList[a]);
+      }
+//      console.log("tl.strkgr = " + tableTaskList['strkgr']);
+      console.log("totalScoreList[strkgr] = " + totalScoreList['strkgr']);
+      atcoder_id_list.sort(
+        function(a,b) {
+          return (totalScoreList[b] - totalScoreList[a]);
+        }
+      );
+      console.log(atcoder_id_list);
+      let tbody = document.getElementById("tbody");
+      let rank=1;
+      let taskCompList = Array(task_id_list.length).fill(0);
+      for (let id of atcoder_id_list) {
+        let tr = document.createElement("tr");
+        let tdrank = document.createElement("td");
+        tdrank.innerHTML = rank; rank++;
+        tdrank.classList.add("rank");
+        tr.append(tdrank);
+        let tdid = document.createElement("td");
+        tdid.innerHTML = id;
+        tdid.classList.add("id");
+        tr.append(tdid);
+        let tdscore = document.createElement("td");
+        tdscore.classList.add("score");
+        tdscore.innerHTML = totalScoreList[id];
+        tr.append(tdscore);
+
+        let ttl = tableTaskList[id];
+        console.log(id +": ttl="); console.log(ttl);
+        console.log("ttl.length:" + ttl.length);
+        
+        for (let i=0; i<ttl.length; i++) {
+          let tdtask = document.createElement("td");
+          let data = ttl[i];
+          tdtask.classList.add("task");
+          tdtask.innerHTML = data["label"] + "<br>" + data["score"];
+          if (data["label"] == "AC"){
+            tdtask.classList.add("AC");
+            taskCompList[i]++;
+          } else if  (data["label"] == "NONE"){
+            tdtask.classList.add("NONE");
+          } else {
+            tdtask.classList.add("NOAC");
+          }
+          tr.append(tdtask);
+        }
+        tbody.append(tr);
+      }
+      let trfoot = document.createElement("tr");
+      let td1 = document.createElement("td");
+      td1.classList.add("count");
+      td1.setAttribute("colspan", 3);
+      td1.setAttribute("style", "text-align: right;");
+      td1.innerHTML = '<span class="correct">正解者数/</span>参加者数';
+      trfoot.append(td1);
+      for (let i=0; i<task_id_list.length; i++){
+        let tdcount = document.createElement("td");
+        tdcount.classList.add("count");
+        tdcount.innerHTML = '<span class="correct">' + taskCompList[i] + "</span>/" + atcoder_id_list.length;
+        trfoot.append(tdcount);
+      }
+      tbody.append(trfoot);
+    }
+  </script>
+  <title>JOI REGIO2024 at 静岡会場 解答例付き</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>情報オリンピック日本委員会 レギオ講習会静岡会場1日目課題提出状況</h1>
+    <table id="table">
+      <thead>
+        <tr id="table_thead_tr_title"><tr>
+        <tr id="table_thead_tr_task"><tr>
+      </thead>
+      <tbody id="tbody">
+      </tbody>
+    </table>
+  <div>
+
+</body>
+
+</html>
