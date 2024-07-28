@@ -75,27 +75,26 @@
           resolve(downloadSubmissions(atcoder_id.value));
         }).then((submissions) => {
           let tasks = document.getElementsByClassName("task");
-          let scoreT = 0;
           for (let task of tasks) {
             let task_url = task.children[0].children[0].href;
             let task_id = task_url.split("/").slice(-1)[0];
             let ac = false;
             for (let submission of submissions) {
               ac |= (submission["problem_id"] == task_id) && (submission["result"] == "AC");
-              scoreT += submission["point"];
             }
             if (ac) {
               task.classList.add("table-success");
             }
           }
-          console.log("score=" + scoreT);
-          document.getElementById("scoreIB").value = scoreT;
         });
 
         const submission_links = document.getElementsByClassName("submissions");
         for (const submission_link of submission_links) {
           submission_link.href += atcoder_id.value;
         }
+
+        const ranking_link = document.getElementById("ranking");
+        ranking_link.href += "?atcoder_id="+atcoder_id.value;
 
         document.getElementById("joi-id-warning").style =
           atcoder_id.value.match(/^[JK][0-9]{6}[A-Z]{2}$/g)
@@ -111,20 +110,12 @@
       myModal.show();
     }
   </script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YCEGH6ERT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-0YCEGH6ERT');
-  </script>
-  <title>JOI REGIO2024 at 静岡会場</title>
+  <title>JOI REGIO2024 at 静岡会場 (8/1) 1日目 </title>
 </head>
 
 <body>
   <div class="container">
-    <h1><a href="first.html">JOI REGIO2024 at 静岡会場</a></h1>
+    <h1><a href="first.html">JOI REGIO2024 at 静岡会場 (8/1) 1日目 </a></h1>
 
     <div>
       <p>
@@ -147,9 +138,9 @@
             </div>
           </div>
           <button type="submit" class="btn btn-dark">表示</button>
-          <input type="textbox" class="from-control" id="scoreIB" name="scoreIB" disabled placeholder="全課題総score">
           <p class="card-text mt-4">AtCoder ユーザ名を入力すると，表中の正解した問題に色が付くようになり，提出一覧には自分の提出だけが表示されるようになる．</p>
         </form>
+        <p><a id="ranking" href="./first_check.html">全課題提出状況確認ページ(ランキング)</a></p>
       </div>
     </div>
 
@@ -164,8 +155,8 @@
 
     <div>
       <p>
-        解答例は筆者が作成したものである．ヒントや解答例に対するコメントを付けていることもある．<br />
-        丁寧な解説は AtCoder の問題ページ右上の解説タブから閲覧できるが，筆者と同じ方針とは限らない．
+        解答例は講師担当が作成したものです．<br />
+        丁寧な解説は AtCoder の問題ページ右上の解説タブから閲覧できますが，筆者と同じ方針とは限りません．
       </p>
 
       <section>

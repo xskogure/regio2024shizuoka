@@ -77,6 +77,15 @@
         border-style: solid;
         text-align: right;
     }
+    td.your {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+    td.your2 {
+        color: red;
+        font-weight: bold;
+    }
     td.id {
         background: #FCC;
         min-width: 50px !important;
@@ -99,6 +108,12 @@
         width: 50px !important;
         border-width: 1px;
         border-color: white;
+        border-style: solid;
+    }
+
+    tr.your {
+        border-width: 2px;
+        border-color: red;
         border-style: solid;
     }
 
@@ -137,7 +152,12 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script>
+    let your_atcoder_id;
+
     window.addEventListener("load", (e) => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("atcoder_id")) your_atcoder_id = params.get("atcoder_id");
+      console.log("your_atcoder_id=["+your_atcoder_id+"]");
       update();
     });
 
@@ -331,16 +351,22 @@
       let taskCompList = Array(task_id_list.length).fill(0);
       for (let id of atcoder_id_list) {
         let tr = document.createElement("tr");
+        if (id == your_atcoder_id) {
+            tr.classList.add("your");
+        }
         let tdrank = document.createElement("td");
         tdrank.innerHTML = rank; rank++;
         tdrank.classList.add("rank");
+        if (id == your_atcoder_id) tdrank.classList.add("your");
         tr.append(tdrank);
         let tdid = document.createElement("td");
         tdid.innerHTML = id;
         tdid.classList.add("id");
+        if (id == your_atcoder_id) tdid.classList.add("your");
         tr.append(tdid);
         let tdscore = document.createElement("td");
         tdscore.classList.add("score");
+        if (id == your_atcoder_id) tdscore.classList.add("your");
         tdscore.innerHTML = totalScoreList[id];
         tr.append(tdscore);
 
@@ -361,6 +387,7 @@
           } else {
             tdtask.classList.add("NOAC");
           }
+          if (id == your_atcoder_id) tdtask.classList.add("your2");
           tr.append(tdtask);
         }
         tbody.append(tr);
