@@ -77,6 +77,9 @@
         border-style: solid;
         text-align: right;
     }
+    td.rank.your{
+        background: #EEE;
+    }
     td.your {
         color: red;
         font-size: x-large;
@@ -85,6 +88,7 @@
     td.your2 {
         color: red;
         font-weight: bold;
+        background: bold;
     }
     td.id {
         background: #FCC;
@@ -94,6 +98,9 @@
         border-color: white;
         border-style: solid;
     }
+    td.id.your{
+        background: #FEE;
+    }
     td.score {
         background: #CFC;
         min-width: 50px !important;
@@ -102,6 +109,9 @@
         border-color: white;
         border-style: solid;
         text-align: right;
+    }
+    td.score.your {
+        background: #EFE;
     }
     td.task {
         min-width: 50px !important;
@@ -118,6 +128,9 @@
     }
 
     td.AC {
+        background: lightblue;
+    }
+    td.AC.your2 {
         background: cyan;
     }
     
@@ -126,7 +139,11 @@
     }
 
     td.NONE {
-        background: gray;
+        background: lightgray;
+    }
+
+    td.NONE.your2 {
+        background: #FFF;
     }
 
     td.count {
@@ -179,7 +196,7 @@
     function update() {
       let atcoder_id_list =
 //         ["strkgr", ];
-         ["strkgr", "schwantz34", "piyoyoyo", "ekusy", "palulu", "segashoo", "propan", "whitemouse"];
+         ["strkgr", "rymuch", "ryamamoto", "schwantz34", "piyoyoyo", "ekusy", "palulu", "segashoo", "propan", "whitemouse"];
       let tasks = document.getElementsByClassName("task");
       let task_section_list = [
 {"title": "&#9312;『基本的なプログラム，入出力の方法を確認しよう』", "colspan": 7},
