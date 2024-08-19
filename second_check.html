@@ -1,0 +1,522 @@
+
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    h1 {
+      font-size: xx-large;
+      font-color: green;
+      font-weight: bold;
+      border-style: solid;
+      border-width: 0pt 0pt 3pt 20pt;
+      border-color: lightblue;
+    }
+
+    h2 {
+      font-size: x-large;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      border-style: solid;
+      border-width: 0pt 0pt 3pt 10pt;
+      border-color: lightgreen;
+    }
+
+    h3 {
+      font-size: large;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      background-color: #DDFFFF;
+    }
+    th.rank {
+        color: white;
+        background: #888;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.id {
+        color: white;
+        background: #833;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.score {
+        color: white;
+        background: #383;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    th.task {
+        color: white;
+        background: #338;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+
+    td.rank {
+        background: #DDD;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+        text-align: right;
+    }
+    td.rank.your{
+        background: #EEE;
+    }
+    td.your {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+    td.your2 {
+        color: red;
+        font-weight: bold;
+        background: bold;
+    }
+    td.id {
+        background: #FCC;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+    td.id.your{
+        background: #FEE;
+    }
+    td.score {
+        background: #CFC;
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+        text-align: right;
+    }
+    td.score.your {
+        background: #EFE;
+    }
+    td.task {
+        min-width: 50px !important;
+        width: 50px !important;
+        border-width: 1px;
+        border-color: white;
+        border-style: solid;
+    }
+
+    tr.your {
+        border-width: 2px;
+        border-color: red;
+        border-style: solid;
+    }
+
+    td.AC {
+        background: lightblue;
+    }
+    td.AC.your2 {
+        background: cyan;
+    }
+    
+    td.NOAC {
+        background: #AFF;
+    }
+
+    td.NONE {
+        background: lightgray;
+    }
+
+    td.NONE.your2 {
+        background: #FFF;
+    }
+
+    td.count {
+        background: #DFF;
+    }
+    
+    span.correct {
+        color: green;
+    }
+
+    h1 a {
+      color: black;
+    }
+
+    .container {
+      max-width: fit-content;
+    }
+
+    .table {
+        border-width: 1px;
+        border-width: 1px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    let your_atcoder_id;
+
+    window.addEventListener("load", (e) => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("atcoder_id")) your_atcoder_id = params.get("atcoder_id");
+      console.log("your_atcoder_id=["+your_atcoder_id+"]");
+      update();
+    });
+
+    function downloadSubmissions(id) {
+      let second = 0;
+      let submissions = [];
+      while (true) {
+        let req = new XMLHttpRequest();
+        req.open("GET", `https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${id}&from_second=${second}`, false);
+        req.send(null);
+        let tmp = JSON.parse(req.responseText);
+        submissions = submissions.concat(tmp);
+        if (tmp.length < 500) break;
+        else second = tmp.slice(-1)[0]["epoch_second"];
+      }
+      return submissions;
+    }
+
+    function update() {
+      let atcoder_id_list =
+//         ["strkgr", ];
+         ["strkgr", "rymuch", "ryamamoto", "yamasita",
+"tatsumaki",
+"yumekashiwa",
+"cherryblossom27",
+"J241396QT",
+"tomopuro",
+"tanakashuma",
+"higashiyama3",
+"clover412",
+"lente07",
+"TaskTaskPro",
+"kaminakamura",
+"cookie0422",
+"norimaki12",
+"hirodaiki",
+"stsuc016",
+"ryottiofficial",
+"nonnonk",
+"hiyori0401",
+"karaagekun77",
+"YUKIy728",
+"rento201020",
+"mokkun06",
+"AsahiSuperDry",
+"gohachi",
+"Super_Ken",
+"tajo2024231",
+"nitamagonokimi", 
+"tajo2024046",
+"xuanwu",
+"kuwaharakazuya",
+"nakasato_uta"
+];
+      let tasks = document.getElementsByClassName("task");
+      let task_section_list = [
+{"title": "&#9312;『JOI2022/2023 一次予選にバーチャル参加しよう』", "colspan": 4},
+{"title": "&#9313;『繰り返しの方法を確認しよう』＆『リストの使い方を確認しよう』(1日目の復習)", "colspan": 10},
+{"title": "&#9314;『辞書順・整列』を使いこなそう！『待ち行列とスタック』を理解しよう！", "colspan": 14},
+{"title": "&#9315;『全探索・動的計画法』に触れよう！", "colspan": 11},
+{"title": "&#9316;『全探索・深さ優先探索・幅優先探索』に触れよう！", "colspan": 16},
+{"title": "&#9318;『もっと難しい問題にチャレンジ』", "colspan": 52}
+];
+      let task_id_list = [
+["joi2023_yo1a_a", "長方形 (Rectangle)"],
+["joi2023_yo1a_b", "ゾロ目 (Same Numbers)"],
+["joi2023_yo1a_c", "3 つの箱 (Three Boxes)"],
+["joi2023_yo1a_d", "二人三脚 (Three-Legged Race)"],
+["abc276_a", "Rightmost"],
+["joi2021_yo1c_b", "IOI 文字列"],
+["joi2021_yo1b_c", "分割"],
+["joi2020_yo1b_c", "最頻値"],
+["joi2022_yo1c_c", "運動会"],
+["joi2021_yo1a_b", "JOI ソート"],
+["joig2021_b", "巻物"],
+["joi2020_yo1b_b", "文字列の反転"],
+["joi2022_yo1c_d", "ボールの移動"],
+["joi2022_yo1b_d", "希少な数"],
+["abc007_2", "辞書式順序"],
+["abc009_2", "心配性な富豪、ファミリーレストランに行く。"],
+["abc045_b", "3人でカードゲームイージー"],
+["abc043_b", "バイナリハックイージー"],
+["arc077_a", "pushpush"],
+["abc120_c", "Unification"],
+["joi2012yo_c", "最高のピザ"],
+["abc240_d", "Strange Balls"],
+["abc188_c", "ABC Tournament"],
+["joi2009yo_b", "コンテスト"],
+["abc088_b", "Card Game for Two"],
+["abc082_b", "Two Anagrams"],
+["joi2012yo_b", "サッカー"],
+["agc027_a", "Candy Distribution Again"],
+["abc113_b", "Palace"],
+["abc097_b", "Exponential"],
+["dp_a", "Frog 1"],
+["joi2013yo_c", "看板 (Signboard) "],
+["abc051_b", "Sum of Three Integers"],
+["dp_b", "Frog 2"],
+["abc085_c", "Otoshidama"],
+["abc057_b", "Checkpoints"],
+["typical90_ax", "Stair Jump（★3）"],
+["abc129_c", "Typical Stairs"],
+["dp_c", "Vacation"],
+["dfs_a", "深さ優先探索"],
+["abc007_3", "幅優先探索"],
+["joi2024_yo2_a", "カードゲーム 2 (Card Game 2)"],
+["joi2024_yo2_b", "買い物 2 (Shopping 2)"],
+["abc029_c", "Brute-force Attack"],
+["abc270_c", "Simple path"],
+["joi2024_yo2_c", "白色光 2 (White Light 2)"],
+["abc114_c", "755"],
+["abc104_c", "All Green"],
+["abc284_c", "Count Connected Components"],
+["abc204_c", "Tour"],
+["abc168_d", ".. (Double Dots)"],
+["abc236_d", "Dance"],
+["abc272_d", "Root M Leaper"],
+["joi2024_yo2_d", "庭園 2 (Garden 2) "],
+["joi2024_yo2_e", "高速道路の通行料金 (Highway Tolls)"],
+["joi2024_yo1c_c", "揃った文字 (Matched Letters)"],
+["abc142_b", "Roller Coaster"],
+["joi2008yo_b", "JOIとIOI"],
+["abc081_b", "Shift only"],
+["arc061_a", "たくさんの数式"],
+["math_and_algorithm_i", "Brute Force 2"],
+["abc249_c", "Just K"],
+["abc183_c", "Travel"],
+["abc321_c", "321-like Searcher"],
+["typical_algorithm_a", "二分探索の練習問題"],
+["abc231_c", "Counting 2"],
+["abc143_d", "Triangles"],
+["abc196_c", "Doubled"],
+["abc205_d", "Kth Excluded"],
+["arc109_b", "log"],
+["dp_d", "Knapsack 1"],
+["dp_e", "Knapsack 2"],
+["abc306_d", "Poisonous Full-Course"],
+["abc160_b", "Golden Coins"],
+["typical_algorithm_b", "区間スケジューリング問題"],
+["abc153_c", "Fennec vs Monster"],
+["abc148_d", "Brick Break"],
+["abc131_d", "Megalomania"],
+["arc092_a", "2D Plane 2N Points"],
+["agc009_a", "Multiple Array"],
+["abc245_e", "Wrapping Chocolate"],
+["abc308_c", "Standings"],
+["abc262_b", "Triangle (Easier)"],
+["abc276_b", "Adjacency List"],
+["abc054_c", "One-stroke Path"],
+["typical90_c", "Longest Circular Road（★4）"],
+["agc005_a", "STring"],
+["abc289_b", "レ"],
+["abc187_c", "1-SAT"],
+["abc291_c", "LRUD Instructions 2"],
+["abc193_c", "Unexpressed"],
+["pastbook2022_b", "編集距離"],
+["pastbook2022_a", "区間分割の仕方を最適化する問題"],
+["tessoku_book_t", "LCS"],
+["dp_f", "LCS"],
+["abc262_b", "Triangle (Easier)"],
+["abc054_c", "One-stroke Path"],
+["practice2_a", "Disjoint Set Union"],
+["abc075_c", "Bridge"],
+["abc177_d", "Friends"],
+["typical_algorithm_f", "最小全域木問題"],
+["abc218_e", "Destruction"],
+["abc235_e", "MST + 1"],
+["arc076_b", "D - Built?"],
+["pastbook2022_e", "最大流"],
+["abc010_4", "浮気予防"],
+["abc239_g", "G - Builder Takahashi"]
+      ];
+      let tr_title = document.getElementById("table_thead_tr_title");
+      let tr_task = document.getElementById("table_thead_tr_task");
+      let th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("rank");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("id");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "　";
+      th.classList.add("score");
+      tr_title.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "Ranking";
+      th.classList.add("rank");
+      tr_task.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "AtCoder ID";
+      th.classList.add("id");
+      tr_task.append(th);
+      th = document.createElement("th");
+      th.innerHTML = "Total Score";
+      th.classList.add("score");
+      tr_task.append(th);
+      for (let task_section of task_section_list) {
+        th = document.createElement("th");
+        th.innerHTML = task_section["title"];
+        th.setAttribute("colspan", task_section["colspan"]);
+        th.classList.add("task");
+        tr_title.append(th);
+      }
+      for (let task_id of task_id_list) {
+        th = document.createElement("th");
+        th.innerHTML = task_id[1];
+        th.classList.add("task");
+        tr_task.append(th);
+      }
+      let tableTaskList = {};
+      let totalScoreList = {};
+
+      for (let atcoder_id of atcoder_id_list) {
+        let allPoint = 0;
+        let tableTask = [];
+/*        
+        new Promise((resolve, reject) => {
+          resolve(downloadSubmissions(atcoder_id));
+        }).then((submissions) => {
+*/
+          let submissions = downloadSubmissions(atcoder_id);
+          let point=0;
+          let resultTask="";
+          for (let task of task_id_list) {
+            let r = false;
+            for (let submission of submissions) {
+              if (submission["problem_id"] == task[0]) {
+                resultTask = submission["result"];
+                point = submission["point"];
+                r = true;
+                if (resultTask == "AC") break;
+              }
+            }
+            let data = {};
+            if (r) {
+              allPoint += point;
+              data["label"] = resultTask;
+              data["score"] = point;
+              tableTask.push(data);
+            } else {
+              data["label"] = "NONE";
+              data["score"] = 0;
+              tableTask.push(data);
+            }
+          }
+//        });
+        totalScoreList[atcoder_id] = allPoint;
+        tableTaskList[atcoder_id] = tableTask;
+      }
+      console.log("tableTaskList="); console.log(tableTaskList);
+      console.log("totalScoreList="); console.log(totalScoreList);
+      for(let a of Object.keys(totalScoreList)) {
+        console.log("id: =>" + a + ", score: " + totalScoreList[a]);
+      }
+//      console.log("tl.strkgr = " + tableTaskList['strkgr']);
+      console.log("totalScoreList[strkgr] = " + totalScoreList['strkgr']);
+      atcoder_id_list.sort(
+        function(a,b) {
+          return (totalScoreList[b] - totalScoreList[a]);
+        }
+      );
+      console.log(atcoder_id_list);
+      let tbody = document.getElementById("tbody");
+      let rank=1;
+      let taskCompList = Array(task_id_list.length).fill(0);
+      for (let id of atcoder_id_list) {
+        let tr = document.createElement("tr");
+        if (id == your_atcoder_id) {
+            tr.classList.add("your");
+        }
+        let tdrank = document.createElement("td");
+        tdrank.innerHTML = rank; rank++;
+        tdrank.classList.add("rank");
+        if (id == your_atcoder_id) tdrank.classList.add("your");
+        tr.append(tdrank);
+        let tdid = document.createElement("td");
+        tdid.innerHTML = id;
+        tdid.classList.add("id");
+        if (id == your_atcoder_id) tdid.classList.add("your");
+        tr.append(tdid);
+        let tdscore = document.createElement("td");
+        tdscore.classList.add("score");
+        if (id == your_atcoder_id) tdscore.classList.add("your");
+        tdscore.innerHTML = totalScoreList[id];
+        tr.append(tdscore);
+
+        let ttl = tableTaskList[id];
+        console.log(id +": ttl="); console.log(ttl);
+        console.log("ttl.length:" + ttl.length);
+        
+        for (let i=0; i<ttl.length; i++) {
+          let tdtask = document.createElement("td");
+          let data = ttl[i];
+          tdtask.classList.add("task");
+          tdtask.innerHTML = data["label"] + "<br>" + data["score"];
+          if (data["label"] == "AC"){
+            tdtask.classList.add("AC");
+            taskCompList[i]++;
+          } else if  (data["label"] == "NONE"){
+            tdtask.classList.add("NONE");
+          } else {
+            tdtask.classList.add("NOAC");
+          }
+          if (id == your_atcoder_id) tdtask.classList.add("your2");
+          tr.append(tdtask);
+        }
+        tbody.append(tr);
+      }
+      let trfoot = document.createElement("tr");
+      let td1 = document.createElement("td");
+      td1.classList.add("count");
+      td1.setAttribute("colspan", 3);
+      td1.setAttribute("style", "text-align: right;");
+      td1.innerHTML = '<span class="correct">正解者数/</span>参加者数';
+      trfoot.append(td1);
+      for (let i=0; i<task_id_list.length; i++){
+        let tdcount = document.createElement("td");
+        tdcount.classList.add("count");
+        tdcount.innerHTML = '<span class="correct">' + taskCompList[i] + "</span>/" + atcoder_id_list.length;
+        trfoot.append(tdcount);
+      }
+      tbody.append(trfoot);
+    }
+  </script>
+  <title>情報オリンピック日本委員会 レギオ講習会静岡会場2日目課題提出状況</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>情報オリンピック日本委員会 レギオ講習会静岡会場2日目課題提出状況</h1>
+    <table id="table">
+      <thead>
+        <tr id="table_thead_tr_title"><tr>
+        <tr id="table_thead_tr_task"><tr>
+      </thead>
+      <tbody id="tbody">
+      </tbody>
+    </table>
+  <div>
+
+</body>
+
+</html>
